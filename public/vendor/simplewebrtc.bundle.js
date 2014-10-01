@@ -12,8 +12,8 @@ function SimpleWebRTC(opts) {
     var self = this;
     var options = opts || {};
     var config = this.config = {
-            url: 'http://signaling.simplewebrtc.com:8888',
-            socketio: {/* 'force new connection':true*/},
+            url: 'https://localhost:8888',
+            socketio: {secure: true/* 'force new connection':true*/},
             debug: false,
             localVideoEl: '',
             remoteVideosEl: '',
@@ -7772,7 +7772,7 @@ module.exports = function (constraints, cb) {
 
     if (window.navigator.userAgent.match('Chrome')) { 
         var chromever = parseInt(window.navigator.userAgent.match(/Chrome\/(.*) /)[1], 10);
-        var maxver = 33;
+        var maxver = 500;
         // "known" crash in chrome 34 and 35 on linux
         if (window.navigator.userAgent.match('Linux')) maxver = 35;
         if (chromever >= 26 && chromever <= maxver) {

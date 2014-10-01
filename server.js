@@ -26,7 +26,7 @@ https.createServer({key: privateKey, cert: certificate}, app).listen(8000)
     })
     .on('connection', function(res) {
         console.log('connection established');
-        console.log(res);
+        // console.log(res);
     })
     .on('error', function() {
         console.log('error occured');
