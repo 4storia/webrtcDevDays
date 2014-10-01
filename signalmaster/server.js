@@ -6,8 +6,8 @@ var yetify = require('yetify'),
     crypto = require('crypto'),
     port = parseInt(process.env.PORT || config.server.port, 10);
 
-var privateKey = fs.readFileSync('../webrtcDevDays/fakekeys/localhost.key').toString(),
-    certificate = fs.readFileSync('../webrtcDevDays/fakekeys/localhost.cert').toString();
+var privateKey = fs.readFileSync('../simpleWebrtc/fakekeys/localhost.key').toString(),
+    certificate = fs.readFileSync('../simpleWebrtc/fakekeys/localhost.cert').toString();
 
 
     io = require('socket.io').listen(port, {key: privateKey, cert: certificate});

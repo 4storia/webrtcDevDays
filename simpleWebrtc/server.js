@@ -2,10 +2,11 @@
 var fs = require('fs'),
     express = require('express'),
     https = require('https'),
-    http = require('http');
+    http = require('http'),
+    path = require('path');
 
 process.on('uncaughtException', function (err) {
-    logger.error('uncaughtException', err, err.stack);
+    console.error('uncaughtException', err, err.stack);
 });
 
 var privateKey = fs.readFileSync('fakekeys/localhost.key').toString(),
@@ -19,6 +20,7 @@ app.use(express.errorHandler({dumbExceptions: true, showStack: true}));
 // Also you need to hit https://localhost:8000 bubbe
 
 app.use(express.static(__dirname + '/public'));
+app.use(require('less-middleware')(path.join(__dirname, '/public')));
 
 https.createServer({key: privateKey, cert: certificate}, app).listen(8000)
     .on('listening', function() {
