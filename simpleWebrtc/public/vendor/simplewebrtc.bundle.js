@@ -80,6 +80,7 @@ function SimpleWebRTC(opts) {
                 peer = peers[0];
             } else {
                 peer = self.webrtc.createPeer({
+                    name: message.name,
                     id: message.from,
                     type: message.roomType,
                     enableDataChannels: self.config.enableDataChannels && message.roomType !== 'screen',
@@ -192,6 +193,7 @@ function SimpleWebRTC(opts) {
             var peer;
             if (existingPeer.type === 'video') {
                 peer = self.webrtc.createPeer({
+                    name: existingPeer.name,
                     id: existingPeer.id,
                     type: 'screen',
                     sharemyscreen: true,
@@ -296,7 +298,7 @@ SimpleWebRTC.prototype.setVolumeForAll = function (volume) {
     });
 };
 
-SimpleWebRTC.prototype.joinRoom = function (name, cb) {
+SimpleWebRTC.prototype.joinRoom = function (name, studentName, cb) {
     var self = this;
     this.roomName = name;
     this.connection.emit('join', name, function (err, roomDescription) {
@@ -312,6 +314,7 @@ SimpleWebRTC.prototype.joinRoom = function (name, cb) {
                 for (type in client) {
                     if (client[type]) {
                         peer = self.webrtc.createPeer({
+                            name: studentName,
                             id: id,
                             type: type,
                             enableDataChannels: self.config.enableDataChannels && type !== 'screen',
@@ -5314,6 +5317,7 @@ function Peer(options) {
     var self = this;
 
     this.id = options.id;
+    this.name = options.name;
     this.parent = options.parent;
     this.type = options.type || 'video';
     this.oneway = options.oneway || false;
@@ -5407,6 +5411,7 @@ Peer.prototype.handleMessage = function (message) {
 // send via signalling channel
 Peer.prototype.send = function (messageType, payload) {
     var message = {
+        name: this.name,
         to: this.id,
         broadcaster: this.broadcaster,
         roomType: this.type,

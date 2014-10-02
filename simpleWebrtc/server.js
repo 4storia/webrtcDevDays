@@ -26,14 +26,12 @@ https.createServer({key: privateKey, cert: certificate}, app).listen(8000)
     .on('listening', function() {
         console.log('now listening');
     })
-    .on('connection', function(res) {
+    .on('connection', function() {
         console.log('connection established');
-        // console.log(res);
     })
     .on('error', function() {
         console.log('error occured');
     });
 // http.createServer(app).listen(8001);
-
 
 console.log('running on https://localhost:8000 and http://localhost:8001');

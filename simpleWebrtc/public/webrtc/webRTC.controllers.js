@@ -4,8 +4,9 @@ angular.module("WebRTC.Controllers", [
 
 ])
 .controller('WebRTCCtrl', function ($scope, $routeParams, $location) {
-    $scope.room = $routeParams.room;
+    $scope.roomTitle = $routeParams.room;
     $scope.shareValue = 'Share My Screen';
+    $scope.attendees = [];
 
     // create our webrtc connection
     $scope.webrtc = new SimpleWebRTC({
@@ -23,9 +24,12 @@ angular.module("WebRTC.Controllers", [
     // when it's ready, join if we got a room from the URL
     $scope.webrtc.on('readyToCall', function () {
         // you can name it anything
-        if ($scope.room) {
-            $scope.webrtc.joinRoom($scope.room);
-        }
+
+        $scope.join = function() {
+            if ($scope.roomTitle) {
+                $scope.webrtc.joinRoom($scope.roomTitle, $scope.studentName);
+            }
+        };
     });
 
     function showVolume(el, volume) {
@@ -44,12 +48,15 @@ angular.module("WebRTC.Controllers", [
         }
     });
     $scope.webrtc.on('videoAdded', function (video, peer) {
+        $scope.attendees.push(peer);
+        $scope.$digest();
+
         console.log('video added', peer);
         var remotes = document.getElementById('remotes');
         if (remotes) {
             var d = document.createElement('div');
             d.className = 'videoContainer';
-            d.id = 'container_' + webrtc.getDomId(peer);
+            d.id = 'container_' + $scope.webrtc.getDomId(peer);
             d.appendChild(video);
             var vol = document.createElement('div');
             vol.id = 'volume_' + peer.id;
@@ -75,16 +82,8 @@ angular.module("WebRTC.Controllers", [
         showVolume(document.getElementById('localVolume'), volume);
     });
 
-    // Since we use this twice we put it here
-    // function setRoom(name) {
-    //     $('h1').text(name);
-    //     $('#subTitle').text('Link to join: ' + location.href);
-    // }
-
-    if ($scope.room) {
-        // setRoom($scope.room);
-    } else {
-
+    if (!$scope.roomTitle) {
+        $scope.roomTitle = "Start a Room";
     }
 
     $scope.createRoom = function() {
@@ -92,6 +91,7 @@ angular.module("WebRTC.Controllers", [
 
         $scope.webrtc.createRoom(newName, function(err, name) {
             if (!err) {
+                $scope.roomTitle = $scope.roomName;
                 $scope.showLink = true;
                 $scope.roomLink = $location.absUrl() + '?room=' + name;
                 $routeParams.name = name;

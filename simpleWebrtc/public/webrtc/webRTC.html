@@ -1,14 +1,21 @@
-<h1 id="title">Start a room</h1>
+<h1 id="title">{{ roomTitle }}</h1>
 <button ng-click="shareScreen()">{{ shareValue }}</button>
 <p id="subTitle"></p>
 
 <p ng-show="showLink">Link to Join Room: {{roomLink}}</p>
 
-<input ng-model="roomName" type="text">
-<button ng-click="createRoom()">Create it!</button>
+<input ng-model="roomName" type="text" ng-show="!showLink">
+<button ng-click="createRoom()" ng-show="!showLink">Create it!</button>
+
+<input ng-model="studentName" type="text">
+<button ng-click="join()">Join Room</button>
 
 <div class="videoContainer">
     <video id="localVideo" style="height: 150px;" oncontextmenu="return false;"></video>
     <div id="localVolume" class="volume_bar"></div>
+</div>
+<div id="attendees">
+    <h2>Attendees</h2>
+    <span ng-repeat="attendee in attendees">{{ attendee.name }}</span>
 </div>
 <div id="remotes"></div>
