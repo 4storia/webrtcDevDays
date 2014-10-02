@@ -1,48 +1,73 @@
-.videoContainer {
-    position: relative;
-    width: 200px;
-    height: 150px;
-}
-.videoContainer video {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-.volume_bar {
-    position: absolute;
-    width: 5px;
-    height: 0px;
-    right: 0px;
-    bottom: 0px;
-    background-color: #12acef;
+body {
+    margin: 0;
+    top: 0;
+    font-family: 'Helvetica' arial sans-serif;
 }
 
-#chat-container {
-    display: block;
-    clear: both;
-    .room-chat {
-        height: 200px;
-        padding: 10px;
-        overflow: scroll;
-        width: 500px;
+#top-bar {
+    width: 100%;
+    background-color: black;
+    height: 40px;
+    position: fixed;
+    top: 0;
+    #title {
+        width: 1100px;
+        color: white;
+        margin: auto;
+
     }
-    .user-input-container {
-        width: 650px;
-        height: 80px;
+}
+
+#container {
+    margin: 60px auto;
+    width: 1100px;
+
+    .videoContainer {
+        position: relative;
+        width: 400px;
+        height: 300px;
+    }
+    .videoContainer video {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    .volume_bar {
+        position: absolute;
+        width: 5px;
+        height: 0px;
+        right: 0px;
+        bottom: 0px;
+        background-color: #12acef;
+    }
+
+    #chat-container {
+        display: block;
         clear: both;
-        .chat-box {
+        .room-chat {
+            height: 200px;
+            padding: 10px;
+            overflow: scroll;
             width: 500px;
-            height: 75px;
-            display: inline-block;
-            float: left;
-            margin-right: 10px;
         }
-        .send-button {
-            padding: 2px;
-            height: 75px;
-            display: inline-block;
-            float: left;
-            width: 125px;
+        .user-input-container {
+            width: 650px;
+            height: 80px;
+            clear: both;
+            .chat-box {
+                width: 500px;
+                height: 75px;
+                display: inline-block;
+                float: left;
+                margin-right: 10px;
+            }
+            .send-button {
+                padding: 2px;
+                height: 75px;
+                display: inline-block;
+                float: left;
+                width: 125px;
+            }
         }
     }
 }

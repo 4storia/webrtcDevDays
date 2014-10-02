@@ -1,37 +1,41 @@
-<h1 id="title">{{ roomTitle }}</h1>
-<button ng-click="shareScreen()" ng-show="roomOwner">{{ shareValue }}</button>
-<p id="subTitle"></p>
-
-<p ng-show="showLink">Link to Join Room:</p>
-<p ng-show="showLink">{{roomLink}}</p>
-
-<label ng-show="!roomOwned && userName">New Room Name</label>
-<input ng-model="roomName" type="text" ng-show="!roomOwned && userName">
-<button ng-click="createRoom()" ng-show="!roomOwned && userName">Create it!</button>
-
-<label ng-show="!userName">Name</label>
-<input ng-model="studentName" type="text" ng-show="!userName">
-<button ng-click="join()" ng-show="!userName">Join Room</button>
-
-<h2>{{ userName }}</h2>
-
-<div class="videoContainer">
-    <video id="localVideo" style="height: 150px;" oncontextmenu="return false;"></video>
-    <div id="localVolume" class="volume_bar"></div>
+<div id="top-bar">
+    <h1 id="title">{{ roomTitle }}</h1>
 </div>
-<div id="chat-container">
-	<div class="room-chat">
-		<div ng-repeat="message in chatMessages">
-			<span>{{message.username}} [{{message.timestamp | date : 'mediumTime'}}]: </span>
-			<span>{{message.text}}</span>
-		</div>
-	</div>
-	<div class="user-input-container">
-		<textarea class="chat-box" type="text" ng-model="chatMessage" ng-keydown="checkForEnter($event)"></textarea><button class="send-button" ng-click="sendMessage()">Send</button>
-	</div>
+<div id="container">
+    <button ng-click="shareScreen()" ng-show="roomOwner">{{ shareValue }}</button>
+    <p id="subTitle"></p>
+
+    <p ng-show="showLink">Link to Join Room:</p>
+    <p ng-show="showLink">{{roomLink}}</p>
+
+    <label ng-show="!roomOwned && userName">New Room Name</label>
+    <input ng-model="roomName" type="text" ng-show="!roomOwned && userName">
+    <button ng-click="createRoom()" ng-show="!roomOwned && userName">Create it!</button>
+
+    <label ng-show="!userName">Username</label>
+    <input ng-model="studentName" type="text" ng-show="!userName">
+    <button ng-click="join()" ng-show="!userName">Join Room</button>
+
+    <h2>{{ userName }}</h2>
+
+    <div class="videoContainer">
+        <video id="localVideo" oncontextmenu="return false;"></video>
+        <div id="localVolume" class="volume_bar"></div>
+    </div>
+    <div id="chat-container">
+        <div class="room-chat">
+            <div ng-repeat="message in chatMessages">
+                <span>{{message.username}} [{{message.timestamp | date : 'mediumTime'}}]: </span>
+                <span>{{message.text}}</span>
+            </div>
+        </div>
+        <div class="user-input-container">
+            <textarea class="chat-box" type="text" ng-model="chatMessage" ng-keydown="checkForEnter($event)"></textarea><button class="send-button" ng-click="sendMessage()">Send</button>
+        </div>
+    </div>
+    <div id="attendees">
+        <h2>Attendees</h2>
+        <div ng-repeat="attendee in attendees">{{ attendee.name }}</span>
+    </div>
+    <div id="remotes"></div>
 </div>
-<div id="attendees">
-    <h2>Attendees</h2>
-    <div ng-repeat="attendee in attendees">{{ attendee.name }}</span>
-</div>
-<div id="remotes"></div>
