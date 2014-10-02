@@ -5406,7 +5406,13 @@ Peer.prototype.handleMessage = function (message) {
     } else if (message.type === 'unmute') {
         this.parent.emit('unmute', {id: message.from, name: message.payload.name});
     } else if (message.type === 'chat') {
-        this.parent.emit('chat', {id: message.from, name: message.payload.name, text: message.payload.text, timestamp: message.timestamp});
+        this.parent.emit('chat', {
+            id: message.from,
+            name: message.payload.name,
+            username: message.payload.username,
+            text: message.payload.text,
+            timestamp: message.timestamp
+        });
     }
 };
 
