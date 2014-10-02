@@ -9,7 +9,6 @@ angular.module("WebRTC.Controllers", [
     $scope.attendees = [];
 
     if (!$scope.roomTitle) {
-        $scope.roomOwned = false;
         $scope.roomTitle = "Start a Room";
     } else {
         $scope.roomOwned = true;
@@ -37,7 +36,6 @@ angular.module("WebRTC.Controllers", [
                 $scope.webrtc.joinRoom($scope.roomTitle, $scope.studentName);
             } else {
                 $scope.userName = $scope.studentName;
-                // $scope.roomOwned = true;
             }
         };
     });
@@ -61,22 +59,25 @@ angular.module("WebRTC.Controllers", [
         $scope.attendees.push(peer);
         $scope.$digest();
 
-        console.log('video added', peer);
-        var remotes = document.getElementById('remotes');
-        if (remotes) {
-            var d = document.createElement('div');
-            d.className = 'videoContainer';
-            d.id = 'container_' + $scope.webrtc.getDomId(peer);
-            d.appendChild(video);
-            var vol = document.createElement('div');
-            vol.id = 'volume_' + peer.id;
-            vol.className = 'volume_bar';
-            video.onclick = function () {
-                video.style.width = video.videoWidth + 'px';
-                video.style.height = video.videoHeight + 'px';
-            };
-            d.appendChild(vol);
-            remotes.appendChild(d);
+        console.log('peer added', peer);
+
+        if (peer.type === 'screen') {
+            var remotes = document.getElementById('remotes');
+            if (remotes) {
+                var d = document.createElement('div');
+                d.className = 'videoContainer';
+                d.id = 'container_' + $scope.webrtc.getDomId(peer);
+                d.appendChild(video);
+                var vol = document.createElement('div');
+                vol.id = 'volume_' + peer.id;
+                vol.className = 'volume_bar';
+                video.onclick = function () {
+                    video.style.width = video.videoWidth + 'px';
+                    video.style.height = video.videoHeight + 'px';
+                };
+                d.appendChild(vol);
+                remotes.appendChild(d);
+            }
         }
     });
 
@@ -101,9 +102,10 @@ angular.module("WebRTC.Controllers", [
             if (!err) {
                 $scope.roomTitle = $scope.roomName;
                 $scope.showLink = true;
+                $scope.roomOwner = true;
+                $scope.roomOwned = true;
                 $scope.roomLink = $location.absUrl() + '?room=' + name;
                 $routeParams.name = name;
-                $scope.roomOwned = true;
                 $scope.$digest();
             } else {
                 console.log(err);
@@ -122,7 +124,9 @@ angular.module("WebRTC.Controllers", [
         } else {
             $scope.shareValue = "Stop Sharing";
             $scope.webrtc.shareScreen(function (err) {
-                console.log(err);
+                if (err) {
+                    console.log(err);
+                }
             });
             
         }
