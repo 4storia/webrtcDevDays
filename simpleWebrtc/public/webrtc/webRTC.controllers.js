@@ -22,7 +22,7 @@ angular.module("WebRTC.Controllers", [
         // the id/element dom element that will hold remote videos
         remoteVideosEl: '',
         // immediately ask for camera access
-        autoRequestMedia: true,
+        autoRequestMedia: false,
         debug: false,
         detectSpeakingEvents: true,
         autoAdjustMic: false
@@ -30,10 +30,18 @@ angular.module("WebRTC.Controllers", [
 
     $scope.joinRoom = function() {
         if ($scope.roomOwned) {
-            $scope.webrtc.joinRoom($scope.roomTitle, $scope.studentName);
+            $scope.webrtc.joinRoom($scope.roomTitle, $scope.studentName, function() {
+                $scope.webrtc.sendToAll('joinRoom', {type: 'joinRoom', username: $scope.studentName});
+            });
+        } else {
+            $scope.webrtc.startLocalVideo();
         }
         $scope.userName = $scope.studentName;
     };
+
+    $scope.webrtc.on('joinRoom', function(payload) {
+        $scope.attendees.push({username: payload.username});
+    });
 
     $scope.webrtc.on('chat', function(payload) {
         console.log(payload);
@@ -79,19 +87,19 @@ angular.module("WebRTC.Controllers", [
         } else {
             el.style.height = '' + Math.floor((volume + 100) * 100 / 25 - 220) + '%';
         }
-    }
+    };
+
     $scope.webrtc.on('channelMessage', function (peer, label, data) {
         if (data.type == 'volume') {
             showVolume(document.getElementById('volume_' + peer.id), data.volume);
         }
     });
-    $scope.webrtc.on('videoAdded', function (video, peer) {
-        $scope.attendees.push(peer);
-        $scope.$digest();
-        console.log('peer added', peer);
 
-        if (peer.type === 'screen') {
-            var remotes = document.getElementById('remotes');
+    $scope.webrtc.on('videoAdded', function (video, peer) {
+        $scope.$digest();
+        console.log("videoadded?")
+        // if (peer.type === 'screen') {
+            var remotes = angular.element('.videoContainer');
             if (remotes) {
                 var d = document.createElement('div');
                 d.className = 'videoContainer';
@@ -105,9 +113,9 @@ angular.module("WebRTC.Controllers", [
                     video.style.height = video.videoHeight + 'px';
                 };
                 d.appendChild(vol);
-                remotes.appendChild(d);
+                remotes.append(d);
             }
-        }
+        // }
     });
 
     $scope.webrtc.on('videoRemoved', function (video, peer) {

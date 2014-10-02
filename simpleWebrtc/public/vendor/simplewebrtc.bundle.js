@@ -28,7 +28,7 @@ function SimpleWebRTC(opts) {
             },
             localVideo: {
                 autoplay: true,
-                mirror: true,
+                mirror: false,
                 muted: true
             }
         };
@@ -5411,6 +5411,11 @@ Peer.prototype.handleMessage = function (message) {
             name: message.payload.name,
             username: message.payload.username,
             text: message.payload.text,
+            timestamp: message.timestamp
+        });
+    } else if(message.type === 'joinRoom') {
+        this.parent.emit('joinRoom', {
+            payload: message.payload,
             timestamp: message.timestamp
         });
     }
