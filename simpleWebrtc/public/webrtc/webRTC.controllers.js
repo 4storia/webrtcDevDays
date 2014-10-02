@@ -8,6 +8,13 @@ angular.module("WebRTC.Controllers", [
     $scope.shareValue = 'Share My Screen';
     $scope.attendees = [];
 
+    if (!$scope.roomTitle) {
+        $scope.roomOwned = false;
+        $scope.roomTitle = "Start a Room";
+    } else {
+        $scope.roomOwned = true;
+    }
+
     // create our webrtc connection
     $scope.webrtc = new SimpleWebRTC({
         // the id/element dom element that will hold "our" video
@@ -26,8 +33,11 @@ angular.module("WebRTC.Controllers", [
         // you can name it anything
 
         $scope.join = function() {
-            if ($scope.roomTitle) {
+            if ($scope.roomOwned) {
                 $scope.webrtc.joinRoom($scope.roomTitle, $scope.studentName);
+            } else {
+                $scope.userName = $scope.studentName;
+                // $scope.roomOwned = true;
             }
         };
     });
@@ -69,6 +79,7 @@ angular.module("WebRTC.Controllers", [
             remotes.appendChild(d);
         }
     });
+
     $scope.webrtc.on('videoRemoved', function (video, peer) {
         console.log('video removed ', peer);
         var remotes = document.getElementById('remotes');
@@ -82,9 +93,6 @@ angular.module("WebRTC.Controllers", [
         showVolume(document.getElementById('localVolume'), volume);
     });
 
-    if (!$scope.roomTitle) {
-        $scope.roomTitle = "Start a Room";
-    }
 
     $scope.createRoom = function() {
         var newName = $scope.roomName.toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
@@ -95,6 +103,7 @@ angular.module("WebRTC.Controllers", [
                 $scope.showLink = true;
                 $scope.roomLink = $location.absUrl() + '?room=' + name;
                 $routeParams.name = name;
+                $scope.roomOwned = true;
                 $scope.$digest();
             } else {
                 console.log(err);

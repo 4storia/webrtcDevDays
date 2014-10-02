@@ -4,11 +4,15 @@
 
 <p ng-show="showLink">Link to Join Room: {{roomLink}}</p>
 
-<input ng-model="roomName" type="text" ng-show="!showLink">
-<button ng-click="createRoom()" ng-show="!showLink">Create it!</button>
+<label ng-show="!roomOwned && userName">New Room Name</label>
+<input ng-model="roomName" type="text" ng-show="!roomOwned && userName">
+<button ng-click="createRoom()" ng-show="!roomOwned && userName">Create it!</button>
 
-<input ng-model="studentName" type="text">
-<button ng-click="join()">Join Room</button>
+<label ng-show="!userName">Name</label>
+<input ng-model="studentName" type="text" ng-show="!userName">
+<button ng-click="join()" ng-show="!userName">Join Room</button>
+
+<h2>{{ userName }}</h2>
 
 <div class="videoContainer">
     <video id="localVideo" style="height: 150px;" oncontextmenu="return false;"></video>
@@ -16,6 +20,6 @@
 </div>
 <div id="attendees">
     <h2>Attendees</h2>
-    <span ng-repeat="attendee in attendees">{{ attendee.name }}</span>
+    <div ng-repeat="attendee in attendees">{{ attendee.name }}</span>
 </div>
 <div id="remotes"></div>
