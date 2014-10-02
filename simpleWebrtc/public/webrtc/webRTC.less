@@ -20,18 +20,40 @@ body {
 
 #container {
     margin: 60px auto;
-    width: 1100px;
+    width: 1120px;
 
-    .videoContainer {
+    .faculty-screen .videoContainer{
+        height: 700px;
+        width: 1120px;
+    }
+
+    .faculty-video {
+        height: auto;
+        width: auto;
+    }
+    .faculty-video .videoContainer{
+        height: 600px;
+        width: 600px;
+    }
+
+    .faculty-video.plus-screen {
         position: relative;
-        width: 400px;
-        height: 300px;
+        display: inline-block;
+        top: -200px;
+        left: calc(~"1120px - 200px - 20px");
     }
-    .videoContainer video {
-        position: absolute;
-        width: 100%;
+
+    .faculty-video.plus-screen .videoContainer {
+        height: 200px;
+        width: 200px;
+    }
+
+    video {
         height: 100%;
+        width: 100%;
     }
+
+
     .volume_bar {
         position: absolute;
         width: 5px;

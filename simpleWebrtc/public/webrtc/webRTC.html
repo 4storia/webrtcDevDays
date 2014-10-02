@@ -3,8 +3,6 @@
 </div>
 <div id="container">
     <button ng-click="shareScreen()" ng-show="roomOwner">{{ shareValue }}</button>
-    <p id="subTitle"></p>
-
     <p ng-show="showLink">Link to Join Room:</p>
     <p ng-show="showLink">{{roomLink}}</p>
 
@@ -18,16 +16,11 @@
 
     <h2>{{ userName }}</h2>
 
-    <div class="videoContainer">
-        <video id="facultyVideo" ng-class="facultyVideoClass()"></video>
-        <div id="facultyVolume" class="volume_bar"></div>
+        <div class="faculty-screen" ng-show="facultySharingScreen"></div>
+        <div class="faculty-video" ng-class="facultyVideoClass()"></div>
+        <div class="student-video" ng-show="studentSharingVideo"></div>
 
-        <video id="studentVideo" ng-show="studentSharingVideo" ng-src="studentVideoSrc()"></video>
-        <div id="studentVolume" class="volume_bar"></div>
-
-        <video id="localVideo"></video>
-        <div id="localVolume" class="volume_bar"></div>
-    </div>
+        <div class="localVideo" ng-show="localVideoOn"></div>
     <div id="chat-container">
         <div class="room-chat">
             <div ng-repeat="message in chatMessages">

@@ -6,8 +6,8 @@ angular.module("WebRTC.Controllers", [
 .controller('WebRTCCtrl', function ($scope, $routeParams, $location) {
     $scope.roomTitle = $routeParams.room;
     $scope.shareValue = 'Share My Screen';
-    $scope.teacherSharingScreen = false;
-    $scope.teacherSharingVideo = false;
+    $scope.facultySharingScreen = false;
+    $scope.facultySharingVideo = false;
     $scope.studentSharingVideo = false;
     $scope.attendees = [];
     $scope.chatMessages = [];
@@ -99,11 +99,21 @@ angular.module("WebRTC.Controllers", [
     });
 
     $scope.webrtc.on('videoAdded', function (video, peer) {
-        $scope.$digest();
         console.log("videoadded?", video, peer);
         // if (peer.type === 'screen') {
-            var remotes = angular.element('.videoContainer');
-            if (remotes) {
+            console.log(peer.type)
+            var container;
+            if(peer.faculty && peer.type !== 'screen') {
+                $scope.facultySharingVideo = true;
+                container = angular.element('.faculty-video');
+            } else if(peer.type == 'screen'){
+                $scope.facultySharingScreen = true;
+                container = angular.element('.faculty-screen');
+            } else {
+                container = angular.element('.student-video');
+            }
+
+            if (container) {
                 var d = document.createElement('div');
                 d.className = 'videoContainer';
                 d.id = 'container_' + $scope.webrtc.getDomId(peer);
@@ -116,18 +126,20 @@ angular.module("WebRTC.Controllers", [
                     video.style.height = video.videoHeight + 'px';
                 };
                 d.appendChild(vol);
-                remotes.append(d);
+                container.append(d);
             }
+        $scope.$digest();
         // }
     });
 
     $scope.webrtc.on('videoRemoved', function (video, peer) {
         console.log('video removed ', peer);
-        var remotes = document.getElementById('remotes');
-        var el = document.getElementById('container_' + $scope.webrtc.getDomId(peer));
-        if (remotes && el) {
-            remotes.removeChild(el);
+        if(peer.type == 'screen') {
+            angular.element('.faculty-screen').remove();
+            $scope.facultySharingScreen = false;
         }
+
+        $scope.$digest();
     });
     $scope.webrtc.on('volumeChange', function (volume, treshold) {
         //console.log('own volume', volume);
@@ -169,5 +181,12 @@ angular.module("WebRTC.Controllers", [
             });
             
         }
+    };
+
+    $scope.facultyVideoClass = function() {
+        if($scope.facultySharingScreen) {
+            return 'plus-screen'
+        }
+        return '';
     };
 });
