@@ -23,8 +23,13 @@ function describeRoom(name) {
         clients: {}
     };
     clients.forEach(function (client) {
-        result.clients[client.id] = client.resources;
+        result.clients[client.id] = {
+            resources: client.resources,
+            username: client.username,
+            faculty: client.faculty
+        };
     });
+
     return result;
 }
 
@@ -46,11 +51,9 @@ io.sockets.on('connection', function (client) {
     // pass a message to another id
     client.on('message', function (details) {
         if (!details) return;
-
         var otherClient = io.sockets.sockets[details.to];
         if (!otherClient) return;
 
-        console.log("????", details);
         details.from = client.id;
         otherClient.emit('message', details);
     });
@@ -79,12 +82,13 @@ io.sockets.on('connection', function (client) {
         }
     }
 
-    function join(name, cb) {
+    function join(name, username, cb) {
         // sanity check
         if (typeof name !== 'string') return;
         // leave any existing rooms
         removeFeed();
         safeCb(cb)(null, describeRoom(name));
+        if(username) client.username = username;
         client.join(name);
         client.room = name;
     }
@@ -98,8 +102,8 @@ io.sockets.on('connection', function (client) {
         removeFeed();
     });
 
-    client.on('create', function (name, cb) {
-        if (arguments.length == 2) {
+    client.on('create', function (name, username, cb) {
+        if (arguments.length == 3) {
             cb = (typeof cb == 'function') ? cb : function () {};
             name = name || uuid();
         } else {
@@ -110,6 +114,8 @@ io.sockets.on('connection', function (client) {
         if (io.sockets.clients(name).length) {
             safeCb(cb)('taken');
         } else {
+            client.username = username;
+            client.faculty = true;
             join(name);
             safeCb(cb)(null, name);
         }

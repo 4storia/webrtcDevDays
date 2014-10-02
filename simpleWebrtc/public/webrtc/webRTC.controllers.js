@@ -6,6 +6,9 @@ angular.module("WebRTC.Controllers", [
 .controller('WebRTCCtrl', function ($scope, $routeParams, $location) {
     $scope.roomTitle = $routeParams.room;
     $scope.shareValue = 'Share My Screen';
+    $scope.teacherSharingScreen = false;
+    $scope.teacherSharingVideo = false;
+    $scope.studentSharingVideo = false;
     $scope.attendees = [];
     $scope.chatMessages = [];
 
@@ -97,7 +100,7 @@ angular.module("WebRTC.Controllers", [
 
     $scope.webrtc.on('videoAdded', function (video, peer) {
         $scope.$digest();
-        console.log("videoadded?")
+        console.log("videoadded?", video, peer);
         // if (peer.type === 'screen') {
             var remotes = angular.element('.videoContainer');
             if (remotes) {
@@ -134,8 +137,7 @@ angular.module("WebRTC.Controllers", [
 
     $scope.createRoom = function() {
         var newName = $scope.roomName.toLowerCase().replace(/\s/g, '-').replace(/[^A-Za-z0-9_\-]/g, '');
-
-        $scope.webrtc.createRoom(newName, function(err, name) {
+        $scope.webrtc.createRoom(newName, $scope.userName, function(err, name) {
             if (!err) {
                 $scope.roomTitle = $scope.roomName;
                 $scope.showLink = true;

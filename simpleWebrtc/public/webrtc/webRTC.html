@@ -19,7 +19,13 @@
     <h2>{{ userName }}</h2>
 
     <div class="videoContainer">
-        <video id="localVideo" oncontextmenu="return false;"></video>
+        <video id="facultyVideo" ng-class="facultyVideoClass()"></video>
+        <div id="facultyVolume" class="volume_bar"></div>
+
+        <video id="studentVideo" ng-show="studentSharingVideo" ng-src="studentVideoSrc()"></video>
+        <div id="studentVolume" class="volume_bar"></div>
+
+        <video id="localVideo"></video>
         <div id="localVolume" class="volume_bar"></div>
     </div>
     <div id="chat-container">

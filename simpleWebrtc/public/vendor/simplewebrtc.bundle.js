@@ -298,10 +298,10 @@ SimpleWebRTC.prototype.setVolumeForAll = function (volume) {
     });
 };
 
-SimpleWebRTC.prototype.joinRoom = function (name, studentName, cb) {
+SimpleWebRTC.prototype.joinRoom = function (name, username, cb) {
     var self = this;
     this.roomName = name;
-    this.connection.emit('join', name, function (err, roomDescription) {
+    this.connection.emit('join', name, username, function (err, roomDescription) {
         if (err) {
             self.emit('error', err);
         } else {
@@ -311,12 +311,14 @@ SimpleWebRTC.prototype.joinRoom = function (name, studentName, cb) {
                 peer;
             for (id in roomDescription.clients) {
                 client = roomDescription.clients[id];
-                for (type in client) {
-                    if (client[type]) {
+                var clientResources = roomDescription.clients[id].resources;
+                for (type in clientResources) {
+                    if (clientResources[type]) {
                         peer = self.webrtc.createPeer({
-                            name: studentName,
                             id: id,
                             type: type,
+                            username: client.username,
+                            faculty: client.faculty,
                             enableDataChannels: self.config.enableDataChannels && type !== 'screen',
                             receiveMedia: {
                                 mandatory: {
@@ -418,11 +420,11 @@ SimpleWebRTC.prototype.testReadiness = function () {
     }
 };
 
-SimpleWebRTC.prototype.createRoom = function (name, cb) {
-    if (arguments.length === 2) {
-        this.connection.emit('create', name, cb);
+SimpleWebRTC.prototype.createRoom = function (name, username, cb) {
+    if (arguments.length === 3) {
+        this.connection.emit('create', name, username, cb);
     } else {
-        this.connection.emit('create', name);
+        this.connection.emit('create', name, username);
     }
 };
 
@@ -5320,6 +5322,8 @@ function Peer(options) {
     this.name = options.name;
     this.parent = options.parent;
     this.type = options.type || 'video';
+    this.faculty = options.faculty;
+    this.username = options.username;
     this.oneway = options.oneway || false;
     this.sharemyscreen = options.sharemyscreen || false;
     this.browserPrefix = options.prefix;
