@@ -28,27 +28,17 @@ angular.module("WebRTC.Controllers", [
         autoAdjustMic: false
     });
 
-    // when it's ready, join if we got a room from the URL
-    $scope.webrtc.on('readyToCall', function () {
-        // you can name it anything
-
-        $scope.join = function() {
-            if ($scope.roomOwned) {
-                $scope.webrtc.joinRoom($scope.roomTitle, $scope.studentName);
-            } else {
-                $scope.userName = $scope.studentName;
-            }
-        };
-    });
+    $scope.joinRoom = function() {
+        if ($scope.roomOwned) {
+            $scope.webrtc.joinRoom($scope.roomTitle, $scope.studentName);
+        }
+        $scope.userName = $scope.studentName;
+    };
 
     $scope.webrtc.on('chat', function(payload) {
-        var userPeerId = payload.id;
-        var user = _.find($scope.attendees, function(attendee) {
-            return userPeerId == attendee.id;
-        });
         console.log(payload);
         $scope.chatMessages.push({
-            username: user.name,
+            username: payload.username,
             text: payload.text,
             timestamp: payload.timestamp
         });
@@ -61,10 +51,12 @@ angular.module("WebRTC.Controllers", [
             $scope.sendMessage();
         }
     };
+
     $scope.sendMessage = function() {
         var messageObj = {
             type: 'chat',
             name: $scope.roomName,
+            username: $scope.userName,
             text: $scope.chatMessage
         };
         $scope.webrtc.sendToAll('chat', messageObj);
