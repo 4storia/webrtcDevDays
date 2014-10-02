@@ -5405,6 +5405,8 @@ Peer.prototype.handleMessage = function (message) {
         this.parent.emit('mute', {id: message.from, name: message.payload.name});
     } else if (message.type === 'unmute') {
         this.parent.emit('unmute', {id: message.from, name: message.payload.name});
+    } else if (message.type === 'chat') {
+        this.parent.emit('chat', {id: message.from, name: message.payload.name, text: message.payload.text, timestamp: message.timestamp});
     }
 };
 
@@ -5417,7 +5419,8 @@ Peer.prototype.send = function (messageType, payload) {
         roomType: this.type,
         type: messageType,
         payload: payload,
-        prefix: webrtc.prefix
+        prefix: webrtc.prefix,
+        timestamp: new Date()
     };
     this.logger.log('sending', messageType, message);
     this.parent.emit('message', message);

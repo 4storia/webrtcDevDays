@@ -7,6 +7,7 @@ angular.module("WebRTC.Controllers", [
     $scope.roomTitle = $routeParams.room;
     $scope.shareValue = 'Share My Screen';
     $scope.attendees = [];
+    $scope.chatMessages = [];
 
     if (!$scope.roomTitle) {
         $scope.roomOwned = false;
@@ -42,6 +43,43 @@ angular.module("WebRTC.Controllers", [
         };
     });
 
+    $scope.webrtc.on('chat', function(payload) {
+        var userPeerId = payload.id;
+        var user = _.find($scope.attendees, function(attendee) {
+            return userPeerId == attendee.id;
+        });
+        console.log(payload);
+        $scope.chatMessages.push({
+            username: user.name,
+            text: payload.text,
+            timestamp: payload.timestamp
+        });
+
+        $scope.$digest();
+    });
+
+    $scope.checkForEnter = function(event) {
+        if(event.keyCode === 13) {
+            $scope.sendMessage();
+        }
+    };
+    $scope.sendMessage = function() {
+        var messageObj = {
+            type: 'chat',
+            name: $scope.roomName,
+            text: $scope.chatMessage
+        };
+        $scope.webrtc.sendToAll('chat', messageObj);
+        
+        $scope.chatMessages.push({
+            username: $scope.userName,
+            text: $scope.chatMessage,
+            timestamp: new Date()
+        });
+
+        $scope.chatMessage = '';
+    };
+
     function showVolume(el, volume) {
         if (!el) return;
         if (volume < -45) { // vary between -45 and -20
@@ -60,7 +98,6 @@ angular.module("WebRTC.Controllers", [
     $scope.webrtc.on('videoAdded', function (video, peer) {
         $scope.attendees.push(peer);
         $scope.$digest();
-
         console.log('video added', peer);
         var remotes = document.getElementById('remotes');
         if (remotes) {
@@ -104,6 +141,7 @@ angular.module("WebRTC.Controllers", [
                 $scope.roomLink = $location.absUrl() + '?room=' + name;
                 $routeParams.name = name;
                 $scope.roomOwned = true;
+                console.log($scope.webrtc);
                 $scope.$digest();
             } else {
                 console.log(err);
