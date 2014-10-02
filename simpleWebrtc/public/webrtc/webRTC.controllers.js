@@ -9,7 +9,6 @@ angular.module("WebRTC.Controllers", [
     $scope.facultySharingScreen = false;
     $scope.facultySharingVideo = false;
     $scope.studentSharingVideo = false;
-    $scope.attendees = [];
     $scope.chatMessages = [];
 
     if (!$scope.roomTitle) {
@@ -41,10 +40,6 @@ angular.module("WebRTC.Controllers", [
         }
         $scope.userName = $scope.studentName;
     };
-
-    $scope.webrtc.on('joinRoom', function(payload) {
-        $scope.attendees.push({username: payload.username});
-    });
 
     $scope.webrtc.on('chat', function(payload) {
         console.log(payload);
@@ -135,7 +130,7 @@ angular.module("WebRTC.Controllers", [
     $scope.webrtc.on('videoRemoved', function (video, peer) {
         console.log('video removed ', peer);
         if(peer.type == 'screen') {
-            angular.element('.faculty-screen').remove();
+            angular.element('.faculty-screen .videoContainer').remove();
             $scope.facultySharingScreen = false;
         }
 

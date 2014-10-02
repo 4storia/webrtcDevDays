@@ -10,7 +10,7 @@
     <input ng-model="roomName" type="text" ng-show="!roomOwned && userName">
     <button ng-click="createRoom()" ng-show="!roomOwned && userName">Create it!</button>
 
-    <label ng-show="!userName">Name</label>
+    <label ng-show="!userName">Your name</label>
     <input ng-model="studentName" type="text" ng-show="!userName">
     <button ng-click="joinRoom()" ng-show="!userName">Join Room</button>
 
@@ -21,7 +21,7 @@
         <div class="student-video" ng-show="studentSharingVideo"></div>
 
         <div class="localVideo" ng-show="localVideoOn"></div>
-    <div id="chat-container">
+    <div id="chat-container" ng-class="facultyVideoClass()">
         <div class="room-chat">
             <div ng-repeat="message in chatMessages">
                 <span>{{message.username}} [{{message.timestamp | date : 'mediumTime'}}]: </span>
@@ -31,10 +31,6 @@
         <div class="user-input-container">
             <textarea class="chat-box" type="text" ng-model="chatMessage" ng-keydown="checkForEnter($event)"></textarea><button class="send-button" ng-click="sendMessage()">Send</button>
         </div>
-    </div>
-    <div id="attendees">
-        <h2>Attendees</h2>
-        <div ng-repeat="attendee in attendees">{{ attendee.username }}</span>
     </div>
     <div id="remotes"></div>
 </div>

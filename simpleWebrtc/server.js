@@ -20,7 +20,7 @@ app.use(express.errorHandler({dumbExceptions: true, showStack: true}));
 // Also you need to hit https://localhost:8000 bubbe
 
 app.use(express.static(__dirname + '/public'));
-app.use(require('less-middleware')(path.join(__dirname, '/public')));
+app.use(require('less-middleware')(path.join(__dirname, '/public/webrtc')));
 
 https.createServer({key: privateKey, cert: certificate}, app).listen(8000)
     .on('listening', function() {
