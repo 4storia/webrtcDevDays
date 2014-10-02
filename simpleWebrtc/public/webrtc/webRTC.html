@@ -1,8 +1,9 @@
 <h1 id="title">{{ roomTitle }}</h1>
-<button ng-click="shareScreen()">{{ shareValue }}</button>
+<button ng-click="shareScreen()" ng-show="roomOwner">{{ shareValue }}</button>
 <p id="subTitle"></p>
 
-<p ng-show="showLink">Link to Join Room: {{roomLink}}</p>
+<p ng-show="showLink">Link to Join Room:</p>
+<p ng-show="showLink">{{roomLink}}</p>
 
 <label ng-show="!roomOwned && userName">New Room Name</label>
 <input ng-model="roomName" type="text" ng-show="!roomOwned && userName">
